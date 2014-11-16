@@ -2,8 +2,11 @@
 
 include('toon.class.php');
 
-$toon = new Toon('your_email','your_password');
-$toon->login();
+$toon = new Toon('email','password');
+
+$temperatuur = $toon->get_thermostat_info()['currentTemp'] / 100;
+echo 'Temperatuur: '.round($temperatuur, 1).'&deg;c';
+// echo number_format($temperatuur, 2, ',', '');
 
 $tempinfo 	= $toon->get_thermostat_info();
 
@@ -30,6 +33,5 @@ var_dump($tempinfo);
 //   'haveOTBoiler' => int 1
 
 
-$toon->logout(); //Don't skip the logout!
 
 ?>
