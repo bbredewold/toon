@@ -1,14 +1,11 @@
 <?php
 
 include('toon.class.php');
-
 $toon = new Toon('email','password');
 
 $temperatuur = $toon->get_thermostat_info()['currentTemp'] / 100;
 echo 'Temperatuur: '.round($temperatuur, 1).'&deg;c';
 // echo number_format($temperatuur, 2, ',', '');
-
-$tempinfo 	= $toon->get_thermostat_info();
 
 
 var_dump($tempinfo);

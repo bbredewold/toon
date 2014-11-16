@@ -46,6 +46,7 @@ class Toon {
 		$authenticate 		= file_get_contents('https://toonopafstand.eneco.nl/toonMobileBackendWeb/client/auth/logout?'.$authParams);
 	}
 
+
 	public function makeUUID() { //version 4 UUID
 	  return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 	    mt_rand(0, 0xffff), mt_rand(0, 0xffff),
@@ -56,15 +57,17 @@ class Toon {
 	  );
 	}
 
+
 	public function get_toon_state()
 	{
 		// If toonstate is not set to false, go on
 		if ($this->toonstate == false) {
 
 			// Build query for auth request
-			$authParams		= http_build_query(array('clientId' => $this->sessiondata['clientId'],
+			$authParams		= http_build_query(array('clientId' 		=> $this->sessiondata['clientId'],
 													 'clientIdChecksum' => $this->sessiondata['clientIdChecksum'],
-													 'random' => $this->makeUUID() ) );
+													 'random' 			=> $this->makeUUID(),
+													 '_' 				=> .'1384550425823' ) );
 			// Make data retrieve request
 			$authenticate 	= file_get_contents('https://toonopafstand.eneco.nl/toonMobileBackendWeb/client/auth/retrieveToonState?'.$authParams);
 
