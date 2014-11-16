@@ -9,6 +9,8 @@ class Toon {
 		$this->toonstate 	= false;
 		$this->sessiondata 	= '';
 
+		$this->login();
+
 	}
 
 
@@ -28,7 +30,7 @@ class Toon {
 													 'clientIdChecksum' => $this->sessiondata['clientIdChecksum'],
 													 'agreementId' => $this->sessiondata['agreements'][0]['agreementId'],
 													 'agreementIdChecksum' => $this->sessiondata['agreements'][0]['agreementIdChecksum'],
-													 'random' => uniqid() ) );
+													 'random' => $this->makeUUID() ) );
 		// Make auth start / login request
 		$authenticate 		= file_get_contents('https://toonopafstand.eneco.nl/toonMobileBackendWeb/client/auth/start?'.$authParams);
 	}
@@ -39,11 +41,20 @@ class Toon {
 		// Build query for auth request
 		$authParams			= http_build_query(array('clientId' => $this->sessiondata['clientId'],
 													 'clientIdChecksum' => $this->sessiondata['clientIdChecksum'],
-													 'random' => uniqid() ) );
+													 'random' => $this->makeUUID() ) );
 		// Make logout request
 		$authenticate 		= file_get_contents('https://toonopafstand.eneco.nl/toonMobileBackendWeb/client/auth/logout?'.$authParams);
 	}
 
+	public function makeUUID() { //version 4 UUID
+	  return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+	    mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+	    mt_rand(0, 0xffff),
+	    mt_rand(0, 0x0fff) | 0x4000,
+	    mt_rand(0, 0x3fff) | 0x8000,
+	    mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+	  );
+	}
 
 	public function get_toon_state()
 	{
@@ -53,7 +64,7 @@ class Toon {
 			// Build query for auth request
 			$authParams		= http_build_query(array('clientId' => $this->sessiondata['clientId'],
 													 'clientIdChecksum' => $this->sessiondata['clientIdChecksum'],
-													 'random' => uniqid() ) );
+													 'random' => $this->makeUUID() ) );
 			// Make data retrieve request
 			$authenticate 	= file_get_contents('https://toonopafstand.eneco.nl/toonMobileBackendWeb/client/auth/retrieveToonState?'.$authParams);
 
@@ -112,6 +123,13 @@ class Toon {
 		return $this->toonstate['thermostatStates'];
 	}
 
+
+	public function __destruct() {
+
+		// Logout when finised
+		$this->logout();
+
+	}
 
 
 }
